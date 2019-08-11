@@ -1,8 +1,8 @@
 local ADDON_NAME = "SamyTotemTimers"
 local UPDATE_RATE = 0.3
 
-local _samyTotemTimers = {}
-local _config = SamyTotemTimersConfig.Instance()
+SamyTotemTimers = LibStub("AceAddon-3.0"):NewAddon(ADDON_NAME, "AceEvent-3.0")
+
 local _timeSinceLastUpdate = 0
 local _addonLoaded = false
 
@@ -12,14 +12,15 @@ if not SaveBindings then
     end
 end
 
-function _samyTotemTimers:Init()
+function SamyTotemTimers:Initialize()
     local mainFrame = CreateFrame("FRAME", ADDON_NAME .. "Frame", UIParent)
-    local buttonRectangle = _config.buttonSize * (_config.buttonSpacingMultiplier  + 1)
-    local totalWidth = buttonRectangle  * 4 - _config.buttonSize * _config.buttonSpacingMultiplier
+    local buttonRectangle = SamyTotemTimersConfig.buttonSize * (SamyTotemTimersConfig.buttonSpacingMultiplier  + 1)
+    local totalWidth = buttonRectangle  * 4 - SamyTotemTimersConfig.buttonSize * SamyTotemTimersConfig.buttonSpacingMultiplier
     mainFrame:SetWidth(totalWidth)
-    mainFrame:SetHeight(_config.buttonSize)
+    mainFrame:SetHeight(SamyTotemTimersConfig.buttonSize)
+    self.mainFrame = mainFrame
 
-    local totemLists =  {
+    self.totemLists =  {
         ["Earth"] = SamyTotemTimerList:New(mainFrame, 0, "Earth"),
         ["Fire"] = SamyTotemTimerList:New(mainFrame, buttonRectangle, "Fire"),
         ["Water"] = SamyTotemTimerList:New(mainFrame, buttonRectangle * 2, "Water"),
@@ -40,6 +41,10 @@ function _samyTotemTimers:Init()
             _samyTotemTimers:OnUpdate({ frame = self, event = "OnUpdate", totemLists = totemLists, args = elapsed }) end)
 
     mainFrame:RegisterEvent("ADDON_LOADED")
+end
+
+function SamyTotemTimers:OnEnable()
+    SamyTotemTimers:LoadSavedVariables()
 end
 
 function _samyTotemTimers:ADDON_LOADED(eventArgs)
@@ -64,12 +69,12 @@ function _samyTotemTimers:ADDON_LOADED(eventArgs)
     DEFAULT_CHAT_FRAME:AddMessage("|cffffff88" .. ADDON_NAME .. "|r loaded.")
 end
 
-function _samyTotemTimers:PLAYER_LOGIN(eventArgs)
-    _samyTotemTimers:LoadSavedVariables(eventArgs.frame, eventArgs.totemLists)
-    _addonLoaded = true
-end
+-- function SamyTotemTimers:PLAYER_LOGIN(eventArgs)
+--     _samyTotemTimers:LoadSavedVariables(eventArgs.frame, eventArgs.totemLists)
+--     _addonLoaded = true
+-- end
 
-function _samyTotemTimers:LoadSavedVariables(frame, totemLists)
+function SamyTotemTimers:LoadSavedVariables(frame, totemLists)
     frame:ClearAllPoints()
     frame:SetPoint(_config.db.position.relativePoint, UIParent, _config.db.position.x, _config.db.position.y)
     frame:SetScale(_config.db.scale)
