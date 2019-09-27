@@ -116,6 +116,7 @@ end
 
 function _samyTotemTimers:SetDraggable(isDraggable)
     for k, v in pairs(_totemLists) do
+        SamyTotemTimersUtils:Print('Set list ' .. k .. "draggable. IsEnabled: " .. tostring(v.isEnabled))
         if (v.isEnabled) then
             v:SetDraggable(isDraggable)
         end

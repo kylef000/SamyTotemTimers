@@ -19,19 +19,19 @@ local function EnsureSavedVariablesExists(isReset)
         return ref
     end
 
-    if (SamyTotemTimersDB and (not SamyTotemTimersDB.version or SamyTotemTimersDB.version < 2.1)) then
+    if (SamyTotemTimersDBNew and (not SamyTotemTimersDBNew.version or SamyTotemTimersDBNew.version < 2.1)) then
         isReset = true
         SamyTotemTimersUtils:Print("Current version incompatible with old saved variables, reseting all configuration")
     end
 
-    if (SamyTotemTimersDB and (not SamyTotemTimersDB.version or SamyTotemTimersDB.version < 2.3)) then
-        SamyTotemTimersDB.totemLists = SetDefault(SamyTotemTimersDB.totemLists, SamyTotemTimersConfig.defaultTotemLists, true)  
+    if (SamyTotemTimersDBNew and (not SamyTotemTimersDBNew.version or SamyTotemTimersDBNew.version < 2.3)) then
+        SamyTotemTimersDBNew.totemLists = SetDefault(SamyTotemTimersDBNew.totemLists, SamyTotemTimersConfig.defaultTotemLists, true)  
         SamyTotemTimersUtils:Print("Updated twist totem list with more totems, added order to totemlists")
     end
 
-    if (SamyTotemTimersDB and (not SamyTotemTimersDB.version or SamyTotemTimersDB.version < 2.4)) then
-        SamyTotemTimersDB.totemLists = SetDefault(SamyTotemTimersDB.totemLists, SamyTotemTimersConfig.defaultTotemLists, false)
-        for k, v in pairs(SamyTotemTimersDB.totemLists) do
+    if (SamyTotemTimersDBNew and (not SamyTotemTimersDBNew.version or SamyTotemTimersDBNew.version < 2.4)) then
+        SamyTotemTimersDBNew.totemLists = SetDefault(SamyTotemTimersDBNew.totemLists, SamyTotemTimersConfig.defaultTotemLists, false)
+        for k, v in pairs(SamyTotemTimersDBNew.totemLists) do
             for k2, v2 in pairs(v.totems) do
                 v2.isEnabled = true
             end
@@ -41,29 +41,29 @@ local function EnsureSavedVariablesExists(isReset)
     end
 
     local function postEnsureVariablesExists()
-        for k, v in pairs(SamyTotemTimersDB.totemLists) do
+        for k, v in pairs(SamyTotemTimersDBNew.totemLists) do
             if (v.isShowPulseTimers == nil) then
                 v.isShowPulseTimers = true
             end
         end
 
-        SamyTotemTimersDB.version = 2.4
+        SamyTotemTimersDBNew.version = 2.4
     end
 
-    SamyTotemTimersDB = SetDefault(SamyTotemTimersDB, {}, isReset)
-    SamyTotemTimersDB.lastUsedTotems = SetDefault(SamyTotemTimersDB.lastUsedTotems, {}, isReset)
-    SamyTotemTimersDB.scale = SetDefault(SamyTotemTimersDB.scale, 1, isReset)
-    SamyTotemTimersDB.position = SetDefault(SamyTotemTimersDB.position, {}, isReset)
-    SamyTotemTimersDB.position.hasChanged = SetDefault(SamyTotemTimersDB.position.hasChanged, false, isReset)
-    SamyTotemTimersDB.position.x = SetDefault(SamyTotemTimersDB.position.x, 0, isReset)
-    SamyTotemTimersDB.position.y = SetDefault(SamyTotemTimersDB.position.y, 0, isReset)
-    SamyTotemTimersDB.position.relativePoint = SetDefault(SamyTotemTimersDB.position.relativePoint, "CENTER", isReset)
-    SamyTotemTimersDB.totemLists = SetDefault(SamyTotemTimersDB.totemLists, SamyTotemTimersConfig.defaultTotemLists, isReset)
+    SamyTotemTimersDBNew = SetDefault(SamyTotemTimersDBNew, {}, isReset)
+    SamyTotemTimersDBNew.lastUsedTotems = SetDefault(SamyTotemTimersDBNew.lastUsedTotems, {}, isReset)
+    SamyTotemTimersDBNew.scale = SetDefault(SamyTotemTimersDBNew.scale, 1, isReset)
+    SamyTotemTimersDBNew.position = SetDefault(SamyTotemTimersDBNew.position, {}, isReset)
+    SamyTotemTimersDBNew.position.hasChanged = SetDefault(SamyTotemTimersDBNew.position.hasChanged, false, isReset)
+    SamyTotemTimersDBNew.position.x = SetDefault(SamyTotemTimersDBNew.position.x, 0, isReset)
+    SamyTotemTimersDBNew.position.y = SetDefault(SamyTotemTimersDBNew.position.y, 0, isReset)
+    SamyTotemTimersDBNew.position.relativePoint = SetDefault(SamyTotemTimersDBNew.position.relativePoint, "CENTER", isReset)
+    SamyTotemTimersDBNew.totemLists = SetDefault(SamyTotemTimersDBNew.totemLists, SamyTotemTimersConfig.defaultTotemLists, isReset)
     
 
     postEnsureVariablesExists()
 
-    return SamyTotemTimersDB
+    return SamyTotemTimersDBNew
 end
 
 function SamyTotemTimersDatabase:OnInitialize(samyTotemTimers)
@@ -137,9 +137,9 @@ function SamyTotemTimersDatabase:OnInitialize(samyTotemTimers)
                     order = 3,
                     name = "Order",
                     min = 1,
-                    max = #SamyTotemTimersDB.totemLists,
+                    max = #SamyTotemTimersDBNew.totemLists,
                     softMin = 1,
-                    softMax = #SamyTotemTimersDB.totemLists,
+                    softMax = #SamyTotemTimersDBNew.totemLists,
                     step  = 1,
                     bigStep = 1,
                     type = "range",
@@ -292,7 +292,11 @@ end
 
 function SamyTotemTimersDatabase:ToggleLock()
     _isSamyTotemTimersFrameLocked = not _isSamyTotemTimersFrameLocked
+
+    SamyTotemTimersUtils:Print('Before enable drag')
     _samyTotemTimers:SetDraggable(not _isSamyTotemTimersFrameLocked)
+    SamyTotemTimersUtils:Print('After enable drag')
+
     if (_isSamyTotemTimersFrameLocked) then
         SamyTotemTimersUtils:Print("Frame locked")
     else

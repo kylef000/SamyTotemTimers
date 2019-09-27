@@ -1,8 +1,8 @@
 ## Interface: 11302
-## Version: v2.5
+## Version: v2.6
 ## Title: SamyTotemTimers
 ## Notes: Stuffs
-## SavedVariablesPerCharacter: SamyTotemTimersDB
+## SavedVariablesPerCharacter: SamyTotemTimersDBNew
 ## Author: Samynix
 
 Libs\LibStub\LibStub.lua

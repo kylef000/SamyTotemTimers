@@ -20,6 +20,8 @@ function SamyTotemTimersCastTotemButton:Create(parentFrame, mainFrame, totemList
     ]])
 
     function instance:SetDraggable(isDraggable)
+        SamyTotemTimersUtils:Print('Register ' .. instance.frame:GetName() .. " for drag: " .. tostring(isDraggable))
+
         if (isDraggable) then
             originalFrameStrata = instance.frame:GetFrameStrata()
             instance.frame:RegisterForDrag('LeftButton')
